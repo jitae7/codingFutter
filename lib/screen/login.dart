@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatelessWidget {
-  final GlobalKey _formKey = GlobalKey();
-
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -22,11 +20,7 @@ class AuthPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Container(
-                width: 200,
-                height: 200,
-                color: Colors.blue,
-              ),
+              _logoImage,
               Stack(
                 children: [
                   _inputForm(size),
@@ -47,19 +41,39 @@ class AuthPage extends StatelessWidget {
     );
   }
 
-  Widget _authButton(Size size) {
-    return Positioned(
-      left: size.width * 0.15,
-      right: size.width * 0.15,
-      bottom: 0,
-      child: RaisedButton(
-          child: Text("Login"),
-          color: Colors.blue,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          onPressed: () {}),
-    );
-  }
+  Widget get _logoImage => Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 40, left: 24, right: 24),
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: CircleAvatar(
+              backgroundImage: NetworkImage("https://picsum.photos/200"),
+            ),
+          ),
+        ),
+      );
+
+  Widget _authButton(Size size) => Positioned(
+        left: size.width * 0.15,
+        right: size.width * 0.15,
+        bottom: 0,
+        child: SizedBox(
+          height: 50,
+          child: RaisedButton(
+              child: Text("Login",
+                  style: TextStyle(fontSize: 20, color: Colors.white)),
+              color: Colors.blue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)),
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  print(_passwordController.text.toString());
+                }else{
+                  print("button pressed");
+                }
+              }),
+        ),
+      );
 
   Widget _inputForm(Size size) {
     return Padding(
@@ -73,6 +87,7 @@ class AuthPage extends StatelessWidget {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
                   controller: _emailController,
